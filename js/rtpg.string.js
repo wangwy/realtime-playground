@@ -32,8 +32,6 @@ rtpg.string.FIELD_NAME = 'demo_string';
  * Realtime model's field for String Demo.
  */
 rtpg.string.field = null;
-rtpg.string.referenceStart = null;
-rtpg.string.referenceEnd = null;
 
 /**
  * Starting value of field for String Demo.
@@ -41,9 +39,9 @@ rtpg.string.referenceEnd = null;
 rtpg.string.START_VALUE = 'Edit Me!';
 
 /**
- * DOM selector for the input element for String Demo.
+ * DOM id for the input element for String Demo.
  */
-rtpg.string.INPUT_SELECTOR = '#demoStringInput';
+rtpg.string.INPUT_SELECTOR = 'demoStringInput';
 
 rtpg.string.loadField = function() {
   rtpg.string.field = rtpg.getField(rtpg.string.FIELD_NAME);
@@ -55,31 +53,22 @@ rtpg.string.initializeModel = function(model) {
 }
 
 rtpg.string.updateUi = function() {
-  $(rtpg.string.INPUT_SELECTOR).val(rtpg.string.field.getText());
-};
-
-rtpg.string.onInput = function(evt) {
-  var newValue = $(rtpg.string.INPUT_SELECTOR).val();
-  rtpg.string.field.setText(newValue);
+  var elem = document.getElementById(rtpg.string.INPUT_SELECTOR);
+  gapi.drive.realtime.databinding.bindString(rtpg.string.field, elem);
 };
 
 rtpg.string.onRealtimeInsert = function(evt) {
-  rtpg.string.updateUi();
   rtpg.log.logEvent(evt, "String Inserted");
 };
 
 rtpg.string.onRealtimeDelete = function(evt) {
-  rtpg.string.updateUi();
   rtpg.log.logEvent(evt, "String Deleted");
 };
 
 rtpg.string.connectUi = function() {
-  $(rtpg.string.INPUT_SELECTOR).keyup(rtpg.string.onInput);
-  $(rtpg.string.INPUT_SELECTOR).click(rtpg.string.updateReference);
-  $(rtpg.string.INPUT_SELECTOR).keyup(rtpg.string.updateReference);
 };
 
 rtpg.string.connectRealtime = function() {
-  rtpg.string.field.addEventListener(gapi.drive.realtime.EventType.TEXT_INSERTED, rtpg.string.onRealtimeInsert);
-  rtpg.string.field.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED, rtpg.string.onRealtimeDelete);
+  rtpg.string.field.addEventListener(gapi.drive.realtime.EventType.TEXT_INSERTED,rtpg.string.onRealtimeInsert);
+  rtpg.string.field.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED,rtpg.string.onRealtimeDelete);
 };
